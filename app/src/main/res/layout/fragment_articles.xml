@@ -34,7 +34,13 @@
             android:background="@color/greyDark"
             android:padding="@dimen/activity_vertical_margin"
             android:text="-- EMPTY --"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:visibility="gone" />
+
+        <ListView
+            android:id="@+id/articles_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

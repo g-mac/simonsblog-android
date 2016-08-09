@@ -7,11 +7,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.simonmayrshofer.simonsblog.pojos.Article;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -22,6 +26,8 @@ public class ArticlesFragment extends Fragment {
 
     @BindView(R.id.articles_results)
     TextView resultsView;
+    @BindView(R.id.articles_list)
+    ListView resultsListView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,9 +41,10 @@ public class ArticlesFragment extends Fragment {
 //                .doOnNext(hotspots -> saveData(hotspots)) //save data on bg thread
                 .observeOn(AndroidSchedulers.mainThread()) // run onSuccess on UI thread
                 .subscribe(articles -> {
-                    displayResults("API CALL SUCCESS");
+                    displayResults(articles);
                 }, throwable -> {
-                    displayResults("API CALL FAILURE");
+                    resultsView.setText("API CALL FAILURE: " + throwable.toString());
+                    resultsView.setVisibility(View.VISIBLE);
                     Log.d("ERROR", throwable.toString());
                 });
 
@@ -46,7 +53,7 @@ public class ArticlesFragment extends Fragment {
 
     //----------------------------------------------------------------------------------------------
 
-    private void displayResults(String results) {
-        resultsView.setText(results);
+    private void displayResults(List<Article> results) {
+        resultsListView.setAdapter(new ArticlesListAdapter(getActivity(), results));
     }
 }
