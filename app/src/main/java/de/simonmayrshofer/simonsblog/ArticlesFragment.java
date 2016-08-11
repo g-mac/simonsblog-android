@@ -86,6 +86,8 @@ public class ArticlesFragment extends Fragment {
                 .subscribeOn(Schedulers.io()) // need to run network call on another bg thread
                 .observeOn(AndroidSchedulers.mainThread()) // run onSuccess on UI thread
                 .subscribe(result -> {
+                    userEmail = "";
+                    userToken = "";
                     resultsView.setText("SIGN OUT SUCCESS");
                     Log.d("SIMON", "SIGN OUT SUCCESS");
                 }, throwable -> {
