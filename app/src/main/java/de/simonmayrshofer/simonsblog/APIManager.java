@@ -3,9 +3,12 @@ package de.simonmayrshofer.simonsblog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
 import java.util.List;
 
 import de.simonmayrshofer.simonsblog.pojos.Article;
+import de.simonmayrshofer.simonsblog.pojos.User;
+import de.simonmayrshofer.simonsblog.pojos.login.LoginBody;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -21,18 +24,36 @@ public class APIManager {
 
     public APIManager() {
 
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+//        need to add a logging interceptor to see the okhttp request logs
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        Gson gson = new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .create();
+//        need to add an interceptor for adding headers to every call that is made
+//        Interceptor interceptor = new Interceptor() {
+//            @Override
+//            public Response intercept(Chain chain) throws IOException {
+//                Request original = chain.request();
+//                Request request = original.newBuilder()
+//                        .header("XXX", "XXX")
+//                        .method(original.method(), original.body())
+//                        .build();
+//                return chain.proceed(request);
+//            }
+//        };
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addNetworkInterceptor(loggingInterceptor)
+//                .addInterceptor(interceptor)
+                .build();
+
+//        Gson gson = new GsonBuilder()
+//                .excludeFieldsWithoutExposeAnnotation()
+//                .create();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+//                .addConverterFactory(GsonConverterFactory.create(gson)) //need to add for expose limitation
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create()) //need to add for gson functionality
                 .baseUrl(endpoint)
                 .client(client)
                 .build();
@@ -40,8 +61,16 @@ public class APIManager {
         restAPI = retrofit.create(RestAPI.class);
     }
 
-    public Observable<List<Article>> getArticles() {
-        return restAPI.getArticles();
+    public Observable<List<Article>> getArticles(String email, String token) {
+        return restAPI.getArticles(email, token);
+    }
+
+    public Observable<User> signIn() {
+        return restAPI.signIn(new LoginBody("simon@test.de", "simonsimon"));
+    }
+
+    public Observable<String> signOut(String email, String token) {
+        return restAPI.signOut(email, token);
     }
 
 }
