@@ -7,10 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -30,8 +28,6 @@ public class ArticlesFragment extends Fragment {
     TextView resultsView;
     @BindView(R.id.articles_list)
     ListView resultsListView;
-//    @BindView(R.id.login_button)
-//    Button loginButton;
 
     APIManager apiManager;
 
@@ -54,7 +50,6 @@ public class ArticlesFragment extends Fragment {
     public void onGetArticlesClick(View v) {
         resultsView.setVisibility(View.VISIBLE);
         apiManager.getArticles(userEmail, userToken)
-//                .subscribeOn(Schedulers.newThread())
                 .subscribeOn(Schedulers.io()) // need to run network call on another bg thread
 //                .doOnNext(hotspots -> saveData(hotspots)) //save data on bg thread
                 .observeOn(AndroidSchedulers.mainThread()) // run onSuccess on UI thread
@@ -70,9 +65,7 @@ public class ArticlesFragment extends Fragment {
     public void onLoginClick(View v) {
         resultsView.setVisibility(View.VISIBLE);
         apiManager.signIn()
-//                .subscribeOn(Schedulers.newThread())
                 .subscribeOn(Schedulers.io()) // need to run network call on another bg thread
-//                .doOnNext(hotspots -> saveData(hotspots)) //save data on bg thread
                 .observeOn(AndroidSchedulers.mainThread()) // run onSuccess on UI thread
                 .subscribe(user -> {
                     resultsView.setText("SIGN IN SUCCESS, email: " + user.email);
@@ -90,9 +83,7 @@ public class ArticlesFragment extends Fragment {
     public void onLogoutClick(View v) {
         resultsView.setVisibility(View.VISIBLE);
         apiManager.signOut(userEmail, userToken)
-//                .subscribeOn(Schedulers.newThread())
                 .subscribeOn(Schedulers.io()) // need to run network call on another bg thread
-//                .doOnNext(hotspots -> saveData(hotspots)) //save data on bg thread
                 .observeOn(AndroidSchedulers.mainThread()) // run onSuccess on UI thread
                 .subscribe(result -> {
                     resultsView.setText("SIGN OUT SUCCESS");
