@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     tools:context="de.simonmayrshofer.simonsblog.ArticlesFragment">
 
@@ -13,7 +12,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/login_button"
@@ -31,27 +31,28 @@
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/component_vertical_margin"
-            android:gravity="center_horizontal"
-            android:text="Welcome to Simon's Blog"
-            android:textSize="@dimen/text_size_large" />
+        <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="@dimen/component_vertical_margin"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="Welcome to Simon's Blog"-->
+        <!--android:textSize="@dimen/text_size_large" />-->
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/component_vertical_margin_double"
-            android:gravity="center_horizontal"
-            android:text="Complimentary app"
-            android:textSize="@dimen/text_size_medium" />
+        <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="@dimen/component_vertical_margin_double"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="Complimentary app"-->
+        <!--android:textSize="@dimen/text_size_medium" />-->
 
         <Button
             android:id="@+id/articles_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="GET ARTICLES" />
+            android:text="GET ARTICLES"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/articles_results"
@@ -65,7 +66,11 @@
         <ListView
             android:id="@+id/articles_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+            android:layout_marginTop="@dimen/activity_vertical_margin_half"
+            android:divider="@null"
+            android:dividerHeight="0dp" />
 
     </LinearLayout>
 
