@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 import de.simonmayrshofer.simonsblog.pojos.Article;
@@ -46,13 +47,16 @@ public class APIManager {
 //                .addInterceptor(interceptor)
                 .build();
 
-//        Gson gson = new GsonBuilder()
+        // needed in order to be able to use pojos for both Active Android and Retrofit/GSON
+        Gson gson = new GsonBuilder()
+                .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
 //                .excludeFieldsWithoutExposeAnnotation()
-//                .create();
+//                .serializeNulls()
+                .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-//                .addConverterFactory(GsonConverterFactory.create(gson)) //need to add for expose limitation
+//                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create()) //need to add for gson functionality
                 .baseUrl(endpoint)
                 .client(client)
