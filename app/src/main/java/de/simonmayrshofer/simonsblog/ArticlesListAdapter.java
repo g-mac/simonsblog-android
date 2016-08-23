@@ -27,8 +27,8 @@ public class ArticlesListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
-        return null;
+    public Article getItem(int i) {
+        return articles.get(i);
     }
 
     @Override
