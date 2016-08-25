@@ -8,6 +8,9 @@ public class Helpers {
 
     public static String convertDate(String unformattedDate) {
 
+        if (unformattedDate == null)
+            return "Date not found.";
+
         SimpleDateFormat unformattedDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
         SimpleDateFormat formattedDateFormat = new SimpleDateFormat("EEE, MMM d, h:mm a");
 
@@ -18,6 +21,13 @@ public class Helpers {
             e.printStackTrace();
             return unformattedDate;
         }
+    }
+
+    public static String getCommentCountString(int count) {
+        if (count == 1)
+            return "1 Comment";
+        else
+            return count + " Comments";
     }
 
 }
