@@ -20,6 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.simonmayrshofer.simonsblog.pojos.Article;
+import de.simonmayrshofer.simonsblog.pojos.Comment;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -140,13 +141,21 @@ public class ArticlesFragment extends Fragment {
 
         for (Article article : articles) {
             article.save();
+            for (Comment comment : article.comments) {
+                comment.article = article;
+                comment.save();
+            }
         }
 
         int savedArticles = (new Select()
                 .from(Article.class)
                 .execute()).size();
 
-        Log.d("SIMON", "savedArticles: " + savedArticles);
+        int savedComments = (new Select()
+                .from(Comment.class)
+                .execute()).size();
+
+        Log.d("SIMON", "savedArticles: " + savedArticles + ", savedComments: " + savedComments);
 
 
 //        for (Hotspot hotspot : hotspots) {

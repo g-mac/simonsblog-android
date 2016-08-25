@@ -1,0 +1,34 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/fragment_margin"
+    android:paddingLeft="@dimen/fragment_margin"
+    android:paddingRight="@dimen/fragment_margin"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/list_item_comment_commenter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccentDark"
+        android:textSize="@dimen/text_size_normal"
+        tools:text="Commenter" />
+
+    <TextView
+        android:id="@+id/list_item_comment_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/component_vertical_margin_half"
+        android:textSize="@dimen/text_size_small"
+        tools:text="This is the comment body." />
+
+    <TextView
+        android:id="@+id/list_item_comment_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/text_size_very_small"
+        tools:text="Date 00, 0000" />
+
+</LinearLayout>

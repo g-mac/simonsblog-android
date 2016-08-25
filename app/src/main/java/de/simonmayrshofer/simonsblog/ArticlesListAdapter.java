@@ -46,6 +46,8 @@ public class ArticlesListAdapter extends BaseAdapter {
         titleView.setText(articles.get(i).title);
         TextView bodyView = (TextView) itemView.findViewById(R.id.list_item_article_body);
         bodyView.setText(articles.get(i).text);
+        TextView commentsView = (TextView) itemView.findViewById(R.id.list_item_article_comments);
+        commentsView.setText(Helpers.getCommentCountString(articles.get(i).comments().size()));
 
         return itemView;
     }

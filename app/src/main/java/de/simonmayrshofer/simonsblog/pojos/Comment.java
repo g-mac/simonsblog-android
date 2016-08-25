@@ -5,18 +5,13 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.List;
+@Table(name = "Comments")
+public class Comment extends Model {
 
-@Table(name = "Articles")
-public class Article extends Model {
-
-    @Column (name = "backend_id")
-    public Integer id;
     @Column
-    public String title;
+    public String commenter;
     @Column
-    public String text;
+    public String body;
     @Column
     @SerializedName("created_at")
     public String createdAt;
@@ -24,10 +19,6 @@ public class Article extends Model {
     @SerializedName("updated_at")
     public String updatedAt;
 
-    public List<Comment> comments = new ArrayList<Comment>();
-
-    public  List<Comment> comments() {
-        return getMany(Comment.class, "Article");
-    }
-
+    @Column(name = "Article", onDelete = Column.ForeignKeyAction.CASCADE)
+    public Article article;
 }
