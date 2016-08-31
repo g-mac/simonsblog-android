@@ -41,8 +41,8 @@
                 android:id="@+id/fragment_article_comment_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/component_vertical_margin_half"
                 android:layout_marginTop="@dimen/fragment_margin"
-                android:textColor="@color/colorPrimary"
                 android:text="0 Comments."
                 android:textSize="@dimen/text_size_normal" />
 
@@ -53,6 +53,35 @@
                 android:background="@color/colorAccentBright"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/fragment_margin">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fragment_article_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccentBright"
+                android:orientation="vertical"
+                android:padding="@dimen/fragment_margin">
+
+                <EditText
+                    android:id="@+id/fragment_article_comment_body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/component_vertical_margin_double"
+                    android:hint="Write a comment..."
+                    android:inputType="textMultiLine"
+                    android:scrollHorizontally="false"
+                    android:textColor="@color/greyDark"
+                    android:textSize="@dimen/text_size_normal" />
+
+                <Button
+                    android:id="@+id/fragment_article_comment_send"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_white_grey_selector"
+                    android:text="send comment"
+                    android:textColor="@color/colorAccentDark" />
 
             </LinearLayout>
 
