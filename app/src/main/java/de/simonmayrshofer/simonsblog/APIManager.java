@@ -9,7 +9,7 @@ import java.util.List;
 import de.simonmayrshofer.simonsblog.pojos.Article;
 import de.simonmayrshofer.simonsblog.pojos.CommentBody;
 import de.simonmayrshofer.simonsblog.pojos.User;
-import de.simonmayrshofer.simonsblog.pojos.login.LoginBody;
+import de.simonmayrshofer.simonsblog.pojos.UserBody;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -23,19 +23,29 @@ public class APIManager {
 
     RestAPI restAPI;
 
+    private static APIManager apiManager;
+
+    //todo: use dagger injection instead?
+    public static APIManager getInstance() {
+        if (apiManager == null)
+            return new APIManager();
+        else return apiManager;
+    }
+
     public APIManager() {
 
 //        need to add a logging interceptor to see the okhttp request logs
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-//        need to add an interceptor for adding headers to every call that is made
+////        need to add an interceptor for adding headers to every call that is made
 //        Interceptor interceptor = new Interceptor() {
 //            @Override
 //            public Response intercept(Chain chain) throws IOException {
 //                Request original = chain.request();
 //                Request request = original.newBuilder()
-//                        .header("XXX", "XXX")
+//                        .header("X-User-Email", "XXX")
+//                        .header("X-User-Token", "XXX")
 //                        .method(original.method(), original.body())
 //                        .build();
 //                return chain.proceed(request);
@@ -67,16 +77,16 @@ public class APIManager {
 
     //----------------------------------------------------------------------------------------------
 
-    public Observable<User> signIn() {
-        return restAPI.signIn(new LoginBody("simon@test.de", "simonsimon"));
+    public Observable<User> signIn(String email, String password) {
+        return restAPI.signIn(new UserBody(email,password));
     }
 
     public Observable<String> signOut(String email, String token) {
         return restAPI.signOut(email, token);
     }
 
-    public Observable<List<Article>> getArticles(String email, String token) {
-        return restAPI.getArticles(email, token);
+    public Observable<List<Article>> getArticles() {
+        return restAPI.getArticles();
     }
 
     public Observable<Article> createComment(String articleId, CommentBody commentBody) {

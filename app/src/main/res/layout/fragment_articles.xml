@@ -54,15 +54,6 @@
             android:text="GET ARTICLES"
             android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/articles_results"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/greyDark"
-            android:padding="@dimen/activity_vertical_margin"
-            android:text="-- EMPTY --"
-            android:textColor="@color/white" />
-
         <ListView
             android:id="@+id/articles_list"
             android:layout_width="match_parent"

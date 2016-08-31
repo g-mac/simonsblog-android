@@ -10,6 +10,8 @@ public class User {
     public Integer id;
     @SerializedName("email")
     public String email;
+    @SerializedName("password")
+    public String password;
     @SerializedName("created_at")
     public String createdAt;
     @SerializedName("updated_at")

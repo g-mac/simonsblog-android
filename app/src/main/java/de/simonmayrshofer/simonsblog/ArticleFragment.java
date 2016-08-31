@@ -58,22 +58,17 @@ public class ArticleFragment extends Fragment {
     private int articleId;
     private Article article;
 
-    APIManager apiManager;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_article, container, false);
         ButterKnife.bind(this, view);
-
-        apiManager = new APIManager();
 
         articleId = getArguments().getInt(ARTICLE_ID);
         article = getArticleWithId(articleId);
 
         populateView(article);
 
-        //todo
-        boolean loggedIn = false;
+        boolean loggedIn = PreferenceManager.isLoggedIn(this.getActivity());
         if (!loggedIn)
             commentLayout.setVisibility(View.GONE);
 
@@ -95,7 +90,7 @@ public class ArticleFragment extends Fragment {
 
         CommentBody commentBody = new CommentBody(commenter, body);
 
-        apiManager.createComment(articleId + "", commentBody)
+        APIManager.getInstance().createComment(articleId + "", commentBody)
                 .subscribeOn(Schedulers.io()) // need to run network call on another bg thread
                 .doOnNext(article -> saveData(article)) //save data on bg thread
                 .observeOn(AndroidSchedulers.mainThread()) // run onSuccess on UI thread
