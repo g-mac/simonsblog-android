@@ -18,4 +18,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar" />
 
+    <include layout="@layout/progressbar_overlay" />
+
+
 </RelativeLayout>
