@@ -8,17 +8,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.simonmayrshofer.simonsblog.pojos.Article;
 import de.simonmayrshofer.simonsblog.pojos.Comment;
+import de.simonmayrshofer.simonsblog.pojos.CommentBody;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class ArticleFragment extends Fragment {
 
@@ -42,27 +46,77 @@ public class ArticleFragment extends Fragment {
     TextView titleView;
     @BindView(R.id.fragment_article_comment_count)
     TextView commentCountView;
+    @BindView(R.id.fragment_article_comment_body)
+    EditText commentBodyView;
 
     @BindView(R.id.fragment_article_comments)
     LinearLayout commentsLayout;
+    @BindView(R.id.fragment_article_comment)
+    LinearLayout commentLayout;
 
 
     private int articleId;
     private Article article;
+
+    APIManager apiManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_article, container, false);
         ButterKnife.bind(this, view);
 
+        apiManager = new APIManager();
+
         articleId = getArguments().getInt(ARTICLE_ID);
         article = getArticleWithId(articleId);
 
         populateView(article);
 
+        //todo
+        boolean loggedIn = false;
+        if (!loggedIn)
+            commentLayout.setVisibility(View.GONE);
+
+
         return view;
     }
 
+
+    @OnClick(R.id.fragment_article_comment_send)
+    public void onSendCommentClick(View v) {
+
+        String commenter = "Anonymous";
+        String body = commentBodyView.getText().toString();
+
+        if (body.isEmpty()) {
+            Toast.makeText(getActivity(), "Comment cannot be empty.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        CommentBody commentBody = new CommentBody(commenter, body);
+
+        apiManager.createComment(articleId + "", commentBody)
+                .subscribeOn(Schedulers.io()) // need to run network call on another bg thread
+                .doOnNext(article -> saveData(article)) //save data on bg thread
+                .observeOn(AndroidSchedulers.mainThread()) // run onSuccess on UI thread
+                .subscribe(article -> {
+                    Log.d("SIMON", "onSendCommentClick() SUCCESS");
+                    commentBodyView.setText("");
+                    populateView(getArticleWithId(article.id));
+                }, throwable -> {
+                    Log.d("ERROR", throwable.toString());
+                });
+    }
+
+
+    private void saveData(Article article) {
+        article.save();
+        for (Comment comment : article.comments) {
+            Log.d("SIMON", "saved a comment for article: " + article.id);
+            comment.article = article;
+            comment.save();
+        }
+    }
 
 //------------------------------------------------------------------------------------------
 
@@ -100,7 +154,8 @@ public class ArticleFragment extends Fragment {
 //            commenterView.setText("No Comments found.");
 //        }
 
-        commentCountView.setText(Helpers.getCommentCountString(article.comments().size()));
+        if (article.comments() != null)
+            commentCountView.setText(Helpers.getCommentCountString(article.comments().size()));
 
         populateCommentViews(article);
     }
@@ -109,6 +164,8 @@ public class ArticleFragment extends Fragment {
 
         if (article.comments().size() < 1)
             return;
+
+        commentsLayout.removeAllViews();
 
         for (Comment comment : article.comments()) {
             LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
