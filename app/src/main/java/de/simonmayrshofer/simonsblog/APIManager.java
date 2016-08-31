@@ -3,11 +3,11 @@ package de.simonmayrshofer.simonsblog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
 import de.simonmayrshofer.simonsblog.pojos.Article;
+import de.simonmayrshofer.simonsblog.pojos.CommentBody;
 import de.simonmayrshofer.simonsblog.pojos.User;
 import de.simonmayrshofer.simonsblog.pojos.login.LoginBody;
 import okhttp3.OkHttpClient;
@@ -65,9 +65,7 @@ public class APIManager {
         restAPI = retrofit.create(RestAPI.class);
     }
 
-    public Observable<List<Article>> getArticles(String email, String token) {
-        return restAPI.getArticles(email, token);
-    }
+    //----------------------------------------------------------------------------------------------
 
     public Observable<User> signIn() {
         return restAPI.signIn(new LoginBody("simon@test.de", "simonsimon"));
@@ -75,6 +73,14 @@ public class APIManager {
 
     public Observable<String> signOut(String email, String token) {
         return restAPI.signOut(email, token);
+    }
+
+    public Observable<List<Article>> getArticles(String email, String token) {
+        return restAPI.getArticles(email, token);
+    }
+
+    public Observable<Article> createComment(String articleId, CommentBody commentBody) {
+        return restAPI.createComment(articleId, commentBody);
     }
 
 }
