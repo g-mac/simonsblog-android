@@ -11,7 +11,7 @@ import java.util.List;
 @Table(name = "Articles")
 public class Article extends Model {
 
-    @Column (name = "backend_id")
+    @Column(name = "backend_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     public Integer id;
     @Column
     public String title;
@@ -26,7 +26,7 @@ public class Article extends Model {
 
     public List<Comment> comments = new ArrayList<Comment>();
 
-    public  List<Comment> comments() {
+    public List<Comment> comments() {
         return getMany(Comment.class, "Article");
     }
 
