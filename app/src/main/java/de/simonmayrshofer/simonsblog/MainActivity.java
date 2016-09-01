@@ -9,12 +9,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.Select;
+
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.simonmayrshofer.simonsblog.events.ArticlesUpdatedEvent;
 import de.simonmayrshofer.simonsblog.events.LoginSuccessEvent;
 import de.simonmayrshofer.simonsblog.events.LogoutSuccessEvent;
+import de.simonmayrshofer.simonsblog.pojos.Article;
+import de.simonmayrshofer.simonsblog.pojos.Comment;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -33,10 +41,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         setSupportActionBar(toolbar);
 
         openArticlesFragment();
+
+        getArticles();
 
         String email = PreferenceManager.getString(this, PreferenceManager.PREFS_EMAIL);
         String password = PreferenceManager.getString(this, PreferenceManager.PREFS_PASSWORD);
@@ -51,21 +60,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //----------------------------------------------------------------------------------------------
-
-    public void openArticlesFragment() {
-        replaceFragment(new ArticlesFragment());
-    }
-
-    public void openProfileFragment() {
-        replaceFragment(new ProfileFragment());
-
-//        Toast.makeText(this, "openProfileFragment()", Toast.LENGTH_SHORT).show();
-
-//        if (PreferenceManager.isLoggedIn(this))
-//            logout();
-//        else
-//            login();
-    }
 
     public void login(String email, String password) {
 
@@ -114,6 +108,63 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    public void getArticles() {
+        APIManager.getInstance().getArticles()
+                .subscribeOn(Schedulers.io()) // need to run network call on another bg thread
+                .doOnNext(articles -> saveData(articles)) //save data on bg thread
+                .observeOn(AndroidSchedulers.mainThread()) // run onSuccess on UI thread
+                .subscribe(articles -> {
+                    EventBus.getDefault().post(new ArticlesUpdatedEvent());
+                }, throwable -> {
+                    Log.d("ERROR", throwable.toString());
+                });
+    }
+
+    private void saveData(List<Article> articles) {
+
+//        Log.d("SIMON", "articles.size(): " + articles.size());
+//        Log.d("SIMON", "articles.get(0).getId: " + articles.get(0).id);
+
+        new Delete().from(Article.class).execute(); // delete all existing records
+
+        for (Article article : articles) {
+            article.save();
+            for (Comment comment : article.comments) {
+                comment.article = article;
+                comment.save();
+            }
+        }
+
+        int savedArticles = (new Select()
+                .from(Article.class)
+                .execute()).size();
+
+        int savedComments = (new Select()
+                .from(Comment.class)
+                .execute()).size();
+
+        Log.d("SIMON", "savedArticles: " + savedArticles + ", savedComments: " + savedComments);
+    }
+
+    //----------------------------------------------------------------------------------------------
+
+    public void openArticlesFragment() {
+        Fragment fragment = new ArticlesFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_activity_content_view, fragment, fragment.getClass().getSimpleName())
+                .commit();
+    }
+
+    public void openProfileFragment() {
+        Fragment fragment = new ProfileFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_activity_content_view, fragment, fragment.getClass().getSimpleName())
+                .addToBackStack(fragment.getClass().getSimpleName())
+                .commit();
+    }
+
     public void replaceFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
@@ -121,4 +172,5 @@ public class MainActivity extends AppCompatActivity {
                 .addToBackStack(fragment.getClass().getSimpleName())
                 .commit();
     }
+
 }
