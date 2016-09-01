@@ -1,0 +1,99 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="de.simonmayrshofer.simonsblog.ArticlesFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/fragment_margin">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/fragment_margin">
+
+            <EditText
+                android:id="@+id/profile_login_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="email"
+                android:text="simon@test.de"
+                android:textSize="@dimen/text_size_normal" />
+
+            <EditText
+                android:id="@+id/profile_login_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="password"
+                android:text="simonsimon"
+                android:inputType="textPassword"
+                android:textSize="@dimen/text_size_normal" />
+
+            <CheckBox
+                android:id="@+id/profile_login_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/component_vertical_margin_double"
+                android:text="save password + automatically login"
+                android:textColor="@color/colorPrimaryPaleDark"
+                android:textSize="@dimen/text_size_normal" />
+
+            <Button
+                android:id="@+id/profile_login_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/component_vertical_margin_double"
+                android:background="@drawable/button_green_selector"
+                android:text="login"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_normal" />
+
+            <TextView
+                android:id="@+id/profile_logout_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="You are logged in as:"
+                android:textColor="@color/greyDark"
+                android:textSize="@dimen/text_size_normal" />
+
+            <TextView
+                android:id="@+id/profile_logout_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fragment_margin"
+                android:gravity="center_horizontal"
+                android:text="simon@simon.de"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/text_size_medium" />
+
+            <Button
+                android:id="@+id/profile_logout_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/component_vertical_margin_double"
+                android:layout_marginTop="@dimen/component_vertical_margin_double"
+                android:background="@drawable/button_green_selector"
+                android:text="logout"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_normal" />
+
+        </LinearLayout>
+
+        <!--<LinearLayout-->
+        <!--android:id="@+id/profile_logout_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical"-->
+        <!--android:paddingTop="@dimen/fragment_margin">-->
+
+        <!--</LinearLayout>-->
+
+
+    </ScrollView>
+
+</RelativeLayout>

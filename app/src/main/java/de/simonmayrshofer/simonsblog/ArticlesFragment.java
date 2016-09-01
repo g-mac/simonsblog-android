@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -13,11 +16,17 @@ import android.widget.ListView;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.simonmayrshofer.simonsblog.events.LoginSuccessEvent;
+import de.simonmayrshofer.simonsblog.events.LogoutSuccessEvent;
 import de.simonmayrshofer.simonsblog.pojos.Article;
 import de.simonmayrshofer.simonsblog.pojos.Comment;
 import rx.android.schedulers.AndroidSchedulers;
@@ -33,10 +42,20 @@ public class ArticlesFragment extends Fragment {
 
     private List<Article> articles;
 
+    MenuItem profilMenuItem;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_articles, container, false);
         ButterKnife.bind(this, view);
+
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Simon's Blog");
 
         resultsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -52,7 +71,56 @@ public class ArticlesFragment extends Fragment {
 
         onGetArticlesClick(null);
 
+
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        profilMenuItem = menu.getItem(0);
+        updateMenu();
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_profile:
+                ((MainActivity) getActivity()).openProfileFragment();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void updateMenu() {
+        if (PreferenceManager.isLoggedIn(getActivity()))
+            profilMenuItem.setIcon(getResources().getDrawable(R.drawable.ic_profile));
+        else
+            profilMenuItem.setIcon(getResources().getDrawable(R.drawable.ic_login));
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoginSuccessEvent(LoginSuccessEvent loginSuccessEvent) {
+        updateMenu();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLogoutSuccessEvent(LogoutSuccessEvent logoutSuccessEvent) {
+        updateMenu();
     }
 
     //----------------------------------------------------------------------------------------------
