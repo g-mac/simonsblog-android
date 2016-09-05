@@ -10,6 +10,7 @@ public class PreferenceManager {
     public final static String PREFS_EMAIL = "PREFS_EMAIL";
     public final static String PREFS_PASSWORD = "PREFS_PASSWORD";
     public final static String PREFS_TOKEN = "PREFS_TOKEN";
+    public final static String PREFS_LAST_ARTICLES_UPDATE = "PREFS_LAST_ARTICLES_UPDATE";
 
 //    https://developer.android.com/reference/android/content/SharedPreferences.Editor.html
 //        preferences.edit().putString(key, value).commit();

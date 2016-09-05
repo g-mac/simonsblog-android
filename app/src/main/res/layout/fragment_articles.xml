@@ -2,67 +2,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="de.simonmayrshofer.simonsblog.ArticlesFragment">
 
-    <LinearLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/articles_swipe_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <Button
-                android:id="@+id/login_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="LOGIN" />
-
-            <Button
-                android:id="@+id/logout_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="LOGOUT" />
-
-        </LinearLayout>
-
-        <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="@dimen/component_vertical_margin"-->
-        <!--android:gravity="center_horizontal"-->
-        <!--android:text="Welcome to Simon's Blog"-->
-        <!--android:textSize="@dimen/text_size_large" />-->
-
-        <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="@dimen/component_vertical_margin_double"-->
-        <!--android:gravity="center_horizontal"-->
-        <!--android:text="Complimentary app"-->
-        <!--android:textSize="@dimen/text_size_medium" />-->
-
-        <Button
-            android:id="@+id/articles_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="GET ARTICLES"
-            android:visibility="gone" />
+        android:layout_height="match_parent">
 
         <ListView
             android:id="@+id/articles_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_vertical_margin_half"
-            android:layout_marginTop="@dimen/activity_vertical_margin_half"
             android:divider="@null"
             android:dividerHeight="0dp" />
 
-    </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+    <TextView
+        android:id="@+id/articles_last_updated"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccentVeryTransparent"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
 
 </RelativeLayout>

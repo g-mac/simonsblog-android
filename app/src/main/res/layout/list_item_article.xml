@@ -1,12 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list_item_article_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin_half"
-    android:paddingLeft="@dimen/activity_vertical_margin"
-    android:paddingRight="@dimen/activity_vertical_margin"
-    android:paddingTop="@dimen/activity_vertical_margin_half">
+    android:paddingLeft="@dimen/fragment_margin"
+    android:paddingRight="@dimen/fragment_margin"
+    android:paddingTop="@dimen/fragment_margin">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,5 +48,11 @@
             android:textSize="@dimen/text_size_small" />
 
     </LinearLayout>
+
+    <Space
+        android:id="@+id/list_item_bottom_space"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fragment_margin"
+        android:visibility="gone" />
 
 </LinearLayout>

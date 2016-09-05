@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -48,6 +49,10 @@ public class ArticlesListAdapter extends BaseAdapter {
         bodyView.setText(articles.get(i).text);
         TextView commentsView = (TextView) itemView.findViewById(R.id.list_item_article_comments);
         commentsView.setText(Helpers.getCommentCountString(articles.get(i).comments().size()));
+
+        if (i + 1 == getCount()) {
+            itemView.findViewById(R.id.list_item_bottom_space).setVisibility(View.VISIBLE);
+        }
 
         return itemView;
     }

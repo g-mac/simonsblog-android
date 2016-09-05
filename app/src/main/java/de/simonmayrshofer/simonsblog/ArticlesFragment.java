@@ -3,6 +3,8 @@ package de.simonmayrshofer.simonsblog;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.activeandroid.query.Select;
 
@@ -22,7 +25,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.simonmayrshofer.simonsblog.events.ArticlesUpdatedEvent;
+import de.simonmayrshofer.simonsblog.events.GetArticlesCallbackEvent;
 import de.simonmayrshofer.simonsblog.events.LoginSuccessEvent;
 import de.simonmayrshofer.simonsblog.events.LogoutSuccessEvent;
 import de.simonmayrshofer.simonsblog.pojos.Article;
@@ -31,8 +34,12 @@ public class ArticlesFragment extends Fragment {
 
     private static String ACTIONBAR_TITLE_ARTICLES = "Simon's Blog";
 
+    @BindView(R.id.articles_last_updated)
+    TextView lastUpdateView;
     @BindView(R.id.articles_list)
     ListView resultsListView;
+    @BindView(R.id.articles_swipe_container)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     private List<Article> articles;
 
@@ -59,6 +66,15 @@ public class ArticlesFragment extends Fragment {
                 openArticleFragment(articleId);
             }
         });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                ((MainActivity) getActivity()).getArticles();
+            }
+        });
+
+        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_dark);
 
         return view;
     }
@@ -104,6 +120,13 @@ public class ArticlesFragment extends Fragment {
     //----------------------------------------------------------------------------------------------
 
     private void loadArticlesAndDisplay() {
+
+        String lastUpdate = PreferenceManager.getString(getActivity(), PreferenceManager.PREFS_LAST_ARTICLES_UPDATE);
+        if (!TextUtils.isEmpty(lastUpdate)) {
+            lastUpdateView.setText(lastUpdate);
+            lastUpdateView.setVisibility(View.VISIBLE);
+        }
+
         articles = loadArticles();
         if (articles.size() > 0)
             displayResults(articles);
@@ -128,8 +151,10 @@ public class ArticlesFragment extends Fragment {
     //----------------------------------------------------------------------------------------------
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onArticlesUpdatedEvent(ArticlesUpdatedEvent articlesUpdatedEvent) {
-        loadArticlesAndDisplay();
+    public void onArticlesUpdatedEvent(GetArticlesCallbackEvent getArticlesCallbackEvent) {
+        swipeRefreshLayout.setRefreshing(false);
+        if (getArticlesCallbackEvent.success)
+            loadArticlesAndDisplay();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

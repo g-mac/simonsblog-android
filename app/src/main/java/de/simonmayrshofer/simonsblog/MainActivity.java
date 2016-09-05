@@ -14,11 +14,13 @@ import com.activeandroid.query.Select;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.simonmayrshofer.simonsblog.events.ArticlesUpdatedEvent;
+import de.simonmayrshofer.simonsblog.events.GetArticlesCallbackEvent;
 import de.simonmayrshofer.simonsblog.events.LoginSuccessEvent;
 import de.simonmayrshofer.simonsblog.events.LogoutSuccessEvent;
 import de.simonmayrshofer.simonsblog.pojos.Article;
@@ -34,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     View progressBarView;
     @BindView(R.id.progressbar_fullscreen_text)
     TextView progressBarTextView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,11 +112,16 @@ public class MainActivity extends AppCompatActivity {
     public void getArticles() {
         APIManager.getInstance().getArticles()
                 .subscribeOn(Schedulers.io()) // need to run network call on another bg thread
-                .doOnNext(articles -> saveData(articles)) //save data on bg thread
+                .doOnNext(articles -> {
+                    String date = DateFormat.getDateTimeInstance().format(new Date());
+                    PreferenceManager.putString(this, PreferenceManager.PREFS_LAST_ARTICLES_UPDATE, date);
+                    saveData(articles);
+                }) //save data on bg thread
                 .observeOn(AndroidSchedulers.mainThread()) // run onSuccess on UI thread
                 .subscribe(articles -> {
-                    EventBus.getDefault().post(new ArticlesUpdatedEvent());
+                    EventBus.getDefault().post(new GetArticlesCallbackEvent(true));
                 }, throwable -> {
+                    EventBus.getDefault().post(new GetArticlesCallbackEvent(false));
                     Log.d("ERROR", throwable.toString());
                 });
     }

@@ -12,6 +12,7 @@
     <color name="colorPrimaryPale">#84ae84</color>
     <color name="colorPrimaryPaleDark">#567456</color>
     <color name="colorAccentBright">#d5e0ec</color>
+    <color name="colorAccentVeryTransparent">#643d6b9c</color>
 
     <color name="greyDark">#262626</color>
     <color name="greyBright">#dcdcdc</color>
